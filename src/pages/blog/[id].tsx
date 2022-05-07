@@ -6,9 +6,6 @@ import {
 } from "next";
 import { client } from "libs/client";
 import type { Blog } from "types/blog";
-import cheerio from "cheerio";
-import hljs from "highlight.js";
-import "highlight.js/styles/hybrid.css";
 import { Params } from "next/dist/server/router";
 
 // APIリクエストを行うパスを指定
@@ -24,19 +21,11 @@ export const getStaticProps: GetStaticProps<Props, Params> = async (
 	context
 ) => {
 	const id = context.params?.id;
-	const blog = await client.get({ endpoint: "blog", contentId: id });
-	// 以下の部分を追記
-	const $ = cheerio.load(blog.body);
-	$("pre code").each((_, elm) => {
-		const result = hljs.highlightAuto($(elm).text());
-		$(elm).html(result.value);
-		$(elm).addClass("hljs");
-	});
+	const data = await client.get({ endpoint: "blog", contentId: id });
 
 	return {
 		props: {
-			blog,
-			highlightedBody: $.html(),
+			blog: data,
 		},
 	};
 };
