@@ -7,6 +7,7 @@ import {
 import { client } from "libs/client";
 import type { Blog } from "types/blog";
 import { Params } from "next/dist/server/router";
+import styles from "../../styles/Home.module.scss";
 
 // APIリクエストを行うパスを指定
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
@@ -39,9 +40,9 @@ const BlogId: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 	blog,
 }: Props) => {
 	return (
-		<main>
-			<h1>{blog.title}</h1>
-			<p>{blog.publishedAt}</p>
+		<main className={styles.main}>
+			<h1 className={styles.title}>{blog.title}</h1>
+			<p className={styles.publishedAt}>{blog.publishedAt}</p>
 			{blog.tags.map((tag) => (
 				<li key={tag.id}>#{tag.tag}</li>
 			))}
@@ -49,6 +50,7 @@ const BlogId: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 				dangerouslySetInnerHTML={{
 					__html: `${blog.body}`,
 				}}
+				className={styles.post}
 			/>
 		</main>
 	);
